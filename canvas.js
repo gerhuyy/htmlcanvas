@@ -64,43 +64,7 @@ var set = function(wantedArgument, defaultArgument){
     if(typeof(wantedArgument) === "undefined")return defaultArgument;
     return wantedArgument;
 }
-running = [];
-var loop = {
-    /**
-     * The amount of redraws and mainloops that will happen in a second for any running canvas
-     */
-    FPS: 60,
-    run: function(){
-        console.log("indefinete");
-        for(var i = 0; i<running.length; i++){
-            running[i].run();
-        }
-    },
-    addRunning: function(runnable){
-        running.push(runnable)
-        if(running.length === 1){
-            this.interval = setInterval(function(){
-                        for(var i = 0; i<running.length; i++){
-                            running[i].run();
-                        }
-                    },
-                     1000/this.FPS);
-        };
-    },
-    removeRunning: function(runnable){
-        for(var i = 0; i<running.length; i++){
-            if(running[i] === runnable){
-                running.splice(i, 1);
-                break;
-            }
-        }
-        console.log(running, running.length);
-        if(running.length === 0){
-            clearInterval(this.interval);
-        }
-    },
 
-}
 
 var Mouse = function(id){
     this.elem = document.getElementById(id);

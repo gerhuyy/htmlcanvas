@@ -1,0 +1,60 @@
+<canvas id="canvas" width="500" height="500"></canvas>
+<script src="canvas.js"></script>
+<script>
+canvas.setMainCanvas(new canvas.Canvas("canvas"))
+mainCanvas.backgroundColor = "#bdf"
+mainCanvas.fps = 100;
+var duck = new canvas.Rectangle(0, 0, 40, 40, {style: "red"});
+var score = new canvas.NumText(5, 20, "Score: ", 0, "black");
+var fps = new canvas.NumText(5, 40, "fps: ", 0, "black");
+var flash = new canvas.Rectangle(0, 0, mainCanvas.canvas.width, 
+                                 mainCanvas.canvas.width, {style: "white"});
+flash.opacity = 0;
+flash.draw = function(){
+    if(this.opacity == 0)return;
+    var context = this.canvas.context;
+    context.save();
+    context.globalAlpha = this.opacity;
+    canvas.Rectangle.prototype.draw.call(this);
+    context.restore();
+}
+var x = 0.9,
+    y = 1,
+    cool = 0,
+    wait = 60;
+mainCanvas.mainloop = function(){
+    console.log(Math.round(mainCanvas.dt.fps, 3));
+    fps.num = (""+mainCanvas.dt.fpsMean).slice(0, 5);
+    if(duck.x<0){
+        x = Math.abs(x)
+    }
+    if(duck.y<0){
+        y = Math.abs(y)
+    }
+    if(duck.x+duck.width>mainCanvas.canvas.width){
+        x = -Math.abs(x)
+    }
+    if(duck.y+duck.height>mainCanvas.canvas.height){
+        y = -Math.abs(y)
+    }
+    if(cool){
+        cool--;
+        flash.opacity = (cool*0.8)/wait
+    }
+    duck.x += x;
+    duck.y += y;
+};
+mainCanvas.canvas.addEventListener("mousedown", function (e){
+   if(cool <= 0){
+        if(mainCanvas.mouse.x>duck.x && mainCanvas.mouse.x<duck.x+duck.width &&
+           mainCanvas.mouse.y>duck.y && mainCanvas.mouse.y<duck.y+duck.height){
+                score.num++;
+        };
+        x *= 1.1;
+        y *= 1.1;
+        cool = wait;
+        flash.opacity = (cool*0.8)/wait;
+    }
+});
+mainCanvas.start()
+</script>
